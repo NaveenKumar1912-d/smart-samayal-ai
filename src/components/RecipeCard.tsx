@@ -1,43 +1,63 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users } from "lucide-react";
+import { Clock, Users, Flame, MapPin } from "lucide-react";
+import { Recipe } from "@/data/recipes";
 
 interface RecipeCardProps {
-  title: string;
-  image: string;
-  time: string;
-  servings: string;
-  category: string;
-  description: string;
+  recipe: Recipe;
 }
 
-const RecipeCard = ({ title, image, time, servings, category, description }: RecipeCardProps) => {
+const RecipeCard = ({ recipe }: RecipeCardProps) => {
+  const spiceColors = {
+    mild: "bg-secondary/20 text-secondary",
+    medium: "bg-primary/20 text-primary",
+    spicy: "bg-accent/20 text-accent"
+  };
+
   return (
-    <Card className="overflow-hidden hover:shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-1">
-      <div className="aspect-square overflow-hidden">
+    <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group hover:scale-105 animate-fade-in">
+      <div className="relative h-56 overflow-hidden">
         <img 
-          src={image} 
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+          src={recipe.image} 
+          alt={recipe.name} 
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
-      </div>
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between mb-2">
-          <h3 className="font-bold text-lg">{title}</h3>
-          <Badge variant="secondary" className="bg-accent/10 text-accent border-accent/20">
-            {category}
+        <div className="absolute top-2 right-2 flex gap-2">
+          <Badge className={spiceColors[recipe.spiceLevel]}>
+            <Flame className="h-3 w-3 mr-1" />
+            {recipe.spiceLevel}
           </Badge>
         </div>
-        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{description}</p>
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+        <div className="absolute top-2 left-2">
+          <Badge variant={recipe.dietType === "veg" ? "secondary" : "destructive"}>
+            {recipe.dietType === "veg" ? "Veg" : "Non-Veg"}
+          </Badge>
+        </div>
+      </div>
+      <CardContent className="p-5">
+        <h3 className="font-bold text-xl mb-1">{recipe.name}</h3>
+        <p className="text-sm text-muted-foreground mb-3">{recipe.nameEnglish}</p>
+        <p className="text-sm mb-4 line-clamp-2">{recipe.description}</p>
+        
+        <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
           <div className="flex items-center gap-1">
             <Clock className="h-4 w-4" />
-            <span>{time}</span>
+            <span>{recipe.cookTime}</span>
           </div>
           <div className="flex items-center gap-1">
             <Users className="h-4 w-4" />
-            <span>{servings}</span>
+            <span>{recipe.servings}</span>
           </div>
+          <div className="flex items-center gap-1">
+            <MapPin className="h-4 w-4" />
+            <span className="capitalize">{recipe.region}</span>
+          </div>
+        </div>
+        
+        <div className="mt-4 pt-4 border-t">
+          <p className="text-xs text-muted-foreground">
+            {recipe.calories} calories per serving
+          </p>
         </div>
       </CardContent>
     </Card>
