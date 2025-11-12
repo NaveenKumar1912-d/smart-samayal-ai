@@ -24,9 +24,13 @@ export interface Recipe {
   cookTime: string;
   servings: number;
   calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
   description: string;
   ingredients: string[];
   steps: string[];
+  tips: string[];
 }
 
 export const recipes: Recipe[] = [
@@ -42,6 +46,9 @@ export const recipes: Recipe[] = [
     cookTime: "30 mins",
     servings: 4,
     calories: 150,
+    protein: 4,
+    carbs: 28,
+    fat: 2,
     description: "Soft, fluffy steamed rice cakes - a Tamil Nadu breakfast staple!",
     ingredients: ["Rice", "Urad dal", "Fenugreek seeds", "Salt"],
     steps: [
@@ -49,6 +56,11 @@ export const recipes: Recipe[] = [
       "Grind into smooth batter",
       "Ferment overnight",
       "Pour into idli moulds and steam for 10-12 minutes"
+    ],
+    tips: [
+      "Use the right rice-to-dal ratio (4:1) for best texture",
+      "Fermentation is key - keep batter in warm place for 8-12 hours",
+      "Add a pinch of fenugreek seeds for better fermentation"
     ]
   },
   {
@@ -63,6 +75,9 @@ export const recipes: Recipe[] = [
     cookTime: "25 mins",
     servings: 2,
     calories: 220,
+    protein: 6,
+    carbs: 38,
+    fat: 5,
     description: "Crispy golden dosa with spiced potato masala - irresistible!",
     ingredients: ["Dosa batter", "Potatoes", "Onions", "Green chillies", "Curry leaves", "Mustard seeds"],
     steps: [
@@ -70,6 +85,11 @@ export const recipes: Recipe[] = [
       "Heat tawa and spread dosa batter thin",
       "Add masala filling",
       "Fold and serve hot with chutney and sambar"
+    ],
+    tips: [
+      "Use a well-seasoned iron tawa for the crispiest dosa",
+      "Spread the batter in circular motion from center outward",
+      "Keep the flame medium-high for perfect golden color"
     ]
   },
   {
@@ -84,6 +104,9 @@ export const recipes: Recipe[] = [
     cookTime: "40 mins",
     servings: 6,
     calories: 180,
+    protein: 8,
+    carbs: 24,
+    fat: 6,
     description: "Aromatic lentil stew with vegetables - soul food!",
     ingredients: ["Toor dal", "Drumsticks", "Tomatoes", "Sambar powder", "Tamarind", "Curry leaves"],
     steps: [
@@ -91,6 +114,11 @@ export const recipes: Recipe[] = [
       "Boil vegetables separately",
       "Make sambar with tamarind extract and spices",
       "Add dal and vegetables, simmer"
+    ],
+    tips: [
+      "Don't overcook the dal - it should be soft but not mushy",
+      "Add tamarind extract at the end to retain tanginess",
+      "Fresh curry leaves make all the difference in flavor"
     ]
   },
   {
@@ -105,12 +133,20 @@ export const recipes: Recipe[] = [
     cookTime: "35 mins",
     servings: 4,
     calories: 280,
+    protein: 9,
+    carbs: 42,
+    fat: 8,
     description: "Comforting rice-lentil dish with ghee, pepper, and cashews!",
     ingredients: ["Rice", "Moong dal", "Black pepper", "Cumin", "Cashews", "Ghee", "Curry leaves"],
     steps: [
       "Pressure cook rice and moong dal together",
       "Temper with ghee, pepper, cumin, and cashews",
       "Mix well and serve hot"
+    ],
+    tips: [
+      "Roast moong dal lightly before cooking for nutty flavor",
+      "Use plenty of ghee for authentic taste",
+      "Serve hot with coconut chutney and sambar"
     ]
   },
   {
@@ -125,6 +161,9 @@ export const recipes: Recipe[] = [
     cookTime: "50 mins",
     servings: 4,
     calories: 380,
+    protein: 32,
+    carbs: 12,
+    fat: 24,
     description: "Fiery Chettinad masala with tender chicken - full of flavor!",
     ingredients: ["Chicken", "Chettinad masala", "Onions", "Tomatoes", "Curry leaves", "Fennel seeds"],
     steps: [
@@ -132,6 +171,11 @@ export const recipes: Recipe[] = [
       "Sauté onions and tomatoes",
       "Add Chettinad masala paste",
       "Cook chicken until tender"
+    ],
+    tips: [
+      "Toast the spices before grinding for deeper flavor",
+      "Marinate chicken for at least 30 minutes",
+      "Cook on low heat for tender, juicy chicken"
     ]
   },
   {
@@ -146,6 +190,9 @@ export const recipes: Recipe[] = [
     cookTime: "30 mins",
     servings: 6,
     calories: 200,
+    protein: 7,
+    carbs: 18,
+    fat: 12,
     description: "Crispy on outside, soft inside - perfect evening snack!",
     ingredients: ["Urad dal", "Green chillies", "Ginger", "Curry leaves", "Asafoetida", "Oil for frying"],
     steps: [
@@ -153,6 +200,11 @@ export const recipes: Recipe[] = [
       "Add spices and mix well",
       "Shape into donuts",
       "Deep fry until golden brown"
+    ],
+    tips: [
+      "Grind dal to a coarse texture, not too smooth",
+      "Make a hole in center to ensure even frying",
+      "Oil temperature is crucial - too hot will burn outside"
     ]
   },
   {
@@ -167,6 +219,9 @@ export const recipes: Recipe[] = [
     cookTime: "45 mins",
     servings: 6,
     calories: 320,
+    protein: 8,
+    carbs: 52,
+    fat: 10,
     description: "Creamy, sweet milk pudding with nuts - festival favorite!",
     ingredients: ["Vermicelli", "Milk", "Sugar", "Cardamom", "Cashews", "Raisins", "Ghee"],
     steps: [
@@ -174,6 +229,11 @@ export const recipes: Recipe[] = [
       "Boil milk and add vermicelli",
       "Add sugar and cardamom",
       "Garnish with fried nuts and raisins"
+    ],
+    tips: [
+      "Use full-fat milk for richest flavor",
+      "Roast vermicelli until golden for better taste",
+      "Payasam thickens as it cools, adjust milk accordingly"
     ]
   },
   {
@@ -188,6 +248,9 @@ export const recipes: Recipe[] = [
     cookTime: "25 mins",
     servings: 4,
     calories: 90,
+    protein: 3,
+    carbs: 15,
+    fat: 3,
     description: "Tangy, peppery soup - perfect comfort food!",
     ingredients: ["Tamarind", "Tomatoes", "Rasam powder", "Black pepper", "Cumin", "Curry leaves"],
     steps: [
@@ -195,6 +258,11 @@ export const recipes: Recipe[] = [
       "Boil with tomatoes and spices",
       "Add rasam powder",
       "Temper with mustard, cumin, and curry leaves"
+    ],
+    tips: [
+      "Don't boil rasam too long - it loses flavor",
+      "Freshly ground pepper gives best taste",
+      "Serve hot with rice or drink as soup"
     ]
   }
 ];
