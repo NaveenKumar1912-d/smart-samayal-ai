@@ -1,3 +1,12 @@
+import idliImg from "@/assets/idli.jpg";
+import dosaImg from "@/assets/dosa.jpg";
+import sambarImg from "@/assets/sambar.jpg";
+import pongalImg from "@/assets/pongal.jpg";
+import chettinadChickenImg from "@/assets/chettinad-chicken.jpg";
+import vadaImg from "@/assets/vada.jpg";
+import payasamImg from "@/assets/payasam.jpg";
+import rasamImg from "@/assets/rasam.jpg";
+
 export type DietType = "veg" | "non-veg";
 export type MealType = "breakfast" | "lunch" | "snacks" | "sweets" | "drinks";
 export type SpiceLevel = "mild" | "medium" | "spicy";
@@ -29,7 +38,7 @@ export const recipes: Recipe[] = [
     dietType: "veg",
     spiceLevel: "mild",
     region: "general",
-    image: "/src/assets/idli.jpg",
+    image: idliImg,
     cookTime: "30 mins",
     servings: 4,
     calories: 150,
@@ -50,7 +59,7 @@ export const recipes: Recipe[] = [
     dietType: "veg",
     spiceLevel: "medium",
     region: "general",
-    image: "/src/assets/dosa.jpg",
+    image: dosaImg,
     cookTime: "25 mins",
     servings: 2,
     calories: 220,
@@ -71,7 +80,7 @@ export const recipes: Recipe[] = [
     dietType: "veg",
     spiceLevel: "medium",
     region: "general",
-    image: "/src/assets/sambar.jpg",
+    image: sambarImg,
     cookTime: "40 mins",
     servings: 6,
     calories: 180,
@@ -92,7 +101,7 @@ export const recipes: Recipe[] = [
     dietType: "veg",
     spiceLevel: "mild",
     region: "general",
-    image: "/src/assets/pongal.jpg",
+    image: pongalImg,
     cookTime: "35 mins",
     servings: 4,
     calories: 280,
@@ -112,7 +121,7 @@ export const recipes: Recipe[] = [
     dietType: "non-veg",
     spiceLevel: "spicy",
     region: "chettinad",
-    image: "/src/assets/chettinad-chicken.jpg",
+    image: chettinadChickenImg,
     cookTime: "50 mins",
     servings: 4,
     calories: 380,
@@ -133,7 +142,7 @@ export const recipes: Recipe[] = [
     dietType: "veg",
     spiceLevel: "medium",
     region: "general",
-    image: "/src/assets/vada.jpg",
+    image: vadaImg,
     cookTime: "30 mins",
     servings: 6,
     calories: 200,
@@ -154,7 +163,7 @@ export const recipes: Recipe[] = [
     dietType: "veg",
     spiceLevel: "mild",
     region: "general",
-    image: "/src/assets/payasam.jpg",
+    image: payasamImg,
     cookTime: "45 mins",
     servings: 6,
     calories: 320,
@@ -175,7 +184,7 @@ export const recipes: Recipe[] = [
     dietType: "veg",
     spiceLevel: "medium",
     region: "general",
-    image: "/src/assets/rasam.jpg",
+    image: rasamImg,
     cookTime: "25 mins",
     servings: 4,
     calories: 90,
