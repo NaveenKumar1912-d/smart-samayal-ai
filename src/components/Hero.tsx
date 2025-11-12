@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Sparkles } from "lucide-react";
+import { Sparkles, ChefHat } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-tamil-food.jpg";
 
-interface HeroProps {
-  onOpenChat: () => void;
-}
-
-const Hero = ({ onOpenChat }: HeroProps) => {
+const Hero = () => {
+  const navigate = useNavigate();
   return (
     <section className="relative min-h-[600px] flex items-center overflow-hidden">
       <div 
@@ -43,11 +41,11 @@ const Hero = ({ onOpenChat }: HeroProps) => {
           <div className="flex flex-col sm:flex-row gap-4">
             <Button 
               size="lg" 
-              onClick={onOpenChat}
+              onClick={() => navigate("/ai-cook")}
               className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-[var(--shadow-warm)] text-lg px-8"
             >
-              <MessageSquare className="mr-2 h-5 w-5" />
-              Ask the AI Cook
+              <ChefHat className="mr-2 h-5 w-5" />
+              Ask AI Aachi
             </Button>
             <Button 
               size="lg" 
