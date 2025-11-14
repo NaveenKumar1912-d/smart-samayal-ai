@@ -16,6 +16,25 @@ import idliStep5 from "@/assets/steps/idli-step5.jpg";
 import dosaStep1 from "@/assets/steps/dosa-step1.jpg";
 import dosaStep2 from "@/assets/steps/dosa-step2.jpg";
 import dosaStep3 from "@/assets/steps/dosa-step3.jpg";
+import sambarStep1 from "@/assets/steps/sambar-step1.jpg";
+import sambarStep2 from "@/assets/steps/sambar-step2.jpg";
+import sambarStep3 from "@/assets/steps/sambar-step3.jpg";
+import sambarStep4 from "@/assets/steps/sambar-step4.jpg";
+import pongalStep1 from "@/assets/steps/pongal-step1.jpg";
+import pongalStep2 from "@/assets/steps/pongal-step2.jpg";
+import pongalStep3 from "@/assets/steps/pongal-step3.jpg";
+import chickenStep1 from "@/assets/steps/chicken-step1.jpg";
+import chickenStep2 from "@/assets/steps/chicken-step2.jpg";
+import chickenStep3 from "@/assets/steps/chicken-step3.jpg";
+import vadaStep1 from "@/assets/steps/vada-step1.jpg";
+import vadaStep2 from "@/assets/steps/vada-step2.jpg";
+import vadaStep3 from "@/assets/steps/vada-step3.jpg";
+import payasamStep1 from "@/assets/steps/payasam-step1.jpg";
+import payasamStep2 from "@/assets/steps/payasam-step2.jpg";
+import payasamStep3 from "@/assets/steps/payasam-step3.jpg";
+import rasamStep1 from "@/assets/steps/rasam-step1.jpg";
+import rasamStep2 from "@/assets/steps/rasam-step2.jpg";
+import rasamStep3 from "@/assets/steps/rasam-step3.jpg";
 
 export type DietType = "veg" | "non-veg";
 export type MealType = "breakfast" | "lunch" | "snacks" | "sweets" | "drinks";
@@ -128,7 +147,7 @@ export const recipes: Recipe[] = [
       "Make sambar with tamarind extract and spices",
       "Add dal and vegetables, simmer"
     ],
-    stepImages: [],
+    stepImages: [sambarStep1, sambarStep2, sambarStep3, sambarStep4],
     tips: [
       "Don't overcook the dal - it should be soft but not mushy",
       "Add tamarind extract at the end to retain tanginess",
@@ -157,7 +176,7 @@ export const recipes: Recipe[] = [
       "Temper with ghee, pepper, cumin, and cashews",
       "Mix well and serve hot"
     ],
-    stepImages: [],
+    stepImages: [pongalStep1, pongalStep2, pongalStep3],
     tips: [
       "Roast moong dal lightly before cooking for nutty flavor",
       "Use plenty of ghee for authentic taste",
@@ -187,7 +206,7 @@ export const recipes: Recipe[] = [
       "Add Chettinad masala paste",
       "Cook chicken until tender"
     ],
-    stepImages: [],
+    stepImages: [chickenStep1, chickenStep2, chickenStep3],
     tips: [
       "Toast the spices before grinding for deeper flavor",
       "Marinate chicken for at least 30 minutes",
@@ -217,7 +236,7 @@ export const recipes: Recipe[] = [
       "Shape into donuts",
       "Deep fry until golden brown"
     ],
-    stepImages: [],
+    stepImages: [vadaStep1, vadaStep2, vadaStep3],
     tips: [
       "Grind dal to a coarse texture, not too smooth",
       "Make a hole in center to ensure even frying",
@@ -247,7 +266,7 @@ export const recipes: Recipe[] = [
       "Add sugar and cardamom",
       "Garnish with fried nuts and raisins"
     ],
-    stepImages: [],
+    stepImages: [payasamStep1, payasamStep2, payasamStep3],
     tips: [
       "Use full-fat milk for richest flavor",
       "Roast vermicelli until golden for better taste",
@@ -277,7 +296,7 @@ export const recipes: Recipe[] = [
       "Add rasam powder",
       "Temper with mustard, cumin, and curry leaves"
     ],
-    stepImages: [],
+    stepImages: [rasamStep1, rasamStep2, rasamStep3],
     tips: [
       "Don't boil rasam too long - it loses flavor",
       "Freshly ground pepper gives best taste",
