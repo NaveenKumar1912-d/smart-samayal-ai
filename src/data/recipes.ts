@@ -7,6 +7,16 @@ import vadaImg from "@/assets/vada.jpg";
 import payasamImg from "@/assets/payasam.jpg";
 import rasamImg from "@/assets/rasam.jpg";
 
+// Step images
+import idliStep1 from "@/assets/steps/idli-step1.jpg";
+import idliStep2 from "@/assets/steps/idli-step2.jpg";
+import idliStep3 from "@/assets/steps/idli-step3.jpg";
+import idliStep4 from "@/assets/steps/idli-step4.jpg";
+import idliStep5 from "@/assets/steps/idli-step5.jpg";
+import dosaStep1 from "@/assets/steps/dosa-step1.jpg";
+import dosaStep2 from "@/assets/steps/dosa-step2.jpg";
+import dosaStep3 from "@/assets/steps/dosa-step3.jpg";
+
 export type DietType = "veg" | "non-veg";
 export type MealType = "breakfast" | "lunch" | "snacks" | "sweets" | "drinks";
 export type SpiceLevel = "mild" | "medium" | "spicy";
@@ -30,6 +40,7 @@ export interface Recipe {
   description: string;
   ingredients: string[];
   steps: string[];
+  stepImages: string[];
   tips: string[];
 }
 
@@ -57,6 +68,7 @@ export const recipes: Recipe[] = [
       "Ferment overnight",
       "Pour into idli moulds and steam for 10-12 minutes"
     ],
+    stepImages: [idliStep1, idliStep2, idliStep3, idliStep4, idliStep5],
     tips: [
       "Use the right rice-to-dal ratio (4:1) for best texture",
       "Fermentation is key - keep batter in warm place for 8-12 hours",
@@ -86,6 +98,7 @@ export const recipes: Recipe[] = [
       "Add masala filling",
       "Fold and serve hot with chutney and sambar"
     ],
+    stepImages: [dosaStep1, dosaStep2, dosaStep3],
     tips: [
       "Use a well-seasoned iron tawa for the crispiest dosa",
       "Spread the batter in circular motion from center outward",
@@ -115,6 +128,7 @@ export const recipes: Recipe[] = [
       "Make sambar with tamarind extract and spices",
       "Add dal and vegetables, simmer"
     ],
+    stepImages: [],
     tips: [
       "Don't overcook the dal - it should be soft but not mushy",
       "Add tamarind extract at the end to retain tanginess",
@@ -143,6 +157,7 @@ export const recipes: Recipe[] = [
       "Temper with ghee, pepper, cumin, and cashews",
       "Mix well and serve hot"
     ],
+    stepImages: [],
     tips: [
       "Roast moong dal lightly before cooking for nutty flavor",
       "Use plenty of ghee for authentic taste",
@@ -172,6 +187,7 @@ export const recipes: Recipe[] = [
       "Add Chettinad masala paste",
       "Cook chicken until tender"
     ],
+    stepImages: [],
     tips: [
       "Toast the spices before grinding for deeper flavor",
       "Marinate chicken for at least 30 minutes",
@@ -201,6 +217,7 @@ export const recipes: Recipe[] = [
       "Shape into donuts",
       "Deep fry until golden brown"
     ],
+    stepImages: [],
     tips: [
       "Grind dal to a coarse texture, not too smooth",
       "Make a hole in center to ensure even frying",
@@ -230,6 +247,7 @@ export const recipes: Recipe[] = [
       "Add sugar and cardamom",
       "Garnish with fried nuts and raisins"
     ],
+    stepImages: [],
     tips: [
       "Use full-fat milk for richest flavor",
       "Roast vermicelli until golden for better taste",
@@ -259,6 +277,7 @@ export const recipes: Recipe[] = [
       "Add rasam powder",
       "Temper with mustard, cumin, and curry leaves"
     ],
+    stepImages: [],
     tips: [
       "Don't boil rasam too long - it loses flavor",
       "Freshly ground pepper gives best taste",

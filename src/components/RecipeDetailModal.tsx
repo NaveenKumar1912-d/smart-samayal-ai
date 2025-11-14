@@ -124,17 +124,28 @@ const RecipeDetailModal = ({ recipe, open, onOpenChange }: RecipeDetailModalProp
             {/* Cooking Steps */}
             <div>
               <h3 className="text-xl font-semibold mb-4">Cooking Instructions</h3>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {recipe.steps.map((step, index) => (
                   <div 
                     key={index} 
-                    className="flex gap-4 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors animate-fade-in"
+                    className="flex flex-col md:flex-row gap-4 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors animate-fade-in"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
-                      {index + 1}
+                    <div className="flex gap-4 flex-1">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
+                        {index + 1}
+                      </div>
+                      <p className="text-sm leading-relaxed pt-1">{step}</p>
                     </div>
-                    <p className="text-sm leading-relaxed pt-1">{step}</p>
+                    {recipe.stepImages[index] && (
+                      <div className="w-full md:w-48 h-36 rounded-lg overflow-hidden flex-shrink-0">
+                        <img 
+                          src={recipe.stepImages[index]} 
+                          alt={`Step ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
