@@ -78,6 +78,7 @@ const ChatInterface = ({ selectedIngredients, initialPrompt }: ChatInterfaceProp
       if (!reader) throw new Error("No reader available");
 
       let assistantMessage = "";
+      let assistantImage = "";
       let hasStartedAssistantMessage = false;
 
       while (true) {
@@ -95,6 +96,19 @@ const ChatInterface = ({ selectedIngredients, initialPrompt }: ChatInterfaceProp
             try {
               const parsed = JSON.parse(data);
               const content = parsed.choices?.[0]?.delta?.content;
+              const image = parsed.choices?.[0]?.delta?.image;
+
+              if (image) {
+                assistantImage = image;
+                // Update existing message with image
+                setMessages((prev) => {
+                  const newMessages = [...prev];
+                  if (newMessages[newMessages.length - 1]?.role === "assistant") {
+                    newMessages[newMessages.length - 1].image = image;
+                  }
+                  return newMessages;
+                });
+              }
 
               if (content) {
                 assistantMessage += content;
@@ -102,7 +116,7 @@ const ChatInterface = ({ selectedIngredients, initialPrompt }: ChatInterfaceProp
                 if (!hasStartedAssistantMessage) {
                   setMessages((prev) => [
                     ...prev,
-                    { role: "assistant", content: assistantMessage },
+                    { role: "assistant", content: assistantMessage, image: assistantImage },
                   ]);
                   hasStartedAssistantMessage = true;
                 } else {
