@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 interface Message {
   role: "user" | "assistant";
   content: string;
+  image?: string;
 }
 
 interface ChatMessageProps {
@@ -34,6 +35,13 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
             : "bg-muted text-foreground rounded-tl-sm"
         )}
       >
+        {message.image && (
+          <img 
+            src={message.image} 
+            alt="Recipe" 
+            className="rounded-lg mb-3 w-full max-w-md"
+          />
+        )}
         <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
       </div>
 

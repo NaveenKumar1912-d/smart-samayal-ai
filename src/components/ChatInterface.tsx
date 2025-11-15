@@ -10,6 +10,7 @@ import ChatMessage from "@/components/ChatMessage";
 interface Message {
   role: "user" | "assistant";
   content: string;
+  image?: string;
 }
 
 interface ChatInterfaceProps {
@@ -131,57 +132,54 @@ const ChatInterface = ({ selectedIngredients, initialPrompt }: ChatInterfaceProp
   };
 
   return (
-    <Card className="shadow-lg border-accent/20 h-[600px] flex flex-col">
-      <CardHeader className="border-b">
-        <CardTitle className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-accent" />
-          Chat with AI Aachi
+    <Card className="h-[calc(100vh-12rem)] flex flex-col">
+      <CardHeader className="border-b bg-muted/30">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Sparkles className="h-5 w-5 text-primary" />
+          Recipe Assistant
         </CardTitle>
+        {selectedIngredients.length > 0 && (
+          <p className="text-sm text-muted-foreground mt-2">
+            Selected: {selectedIngredients.join(", ")}
+          </p>
+        )}
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col p-0">
+
+      <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
         <ScrollArea className="flex-1 p-4">
           <div className="space-y-4">
             {messages.map((message, index) => (
               <ChatMessage key={index} message={message} />
             ))}
             {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-muted px-4 py-3 rounded-2xl rounded-tl-sm flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                  <span className="text-sm text-muted-foreground">
-                    AI Aachi is thinking...
-                  </span>
-                </div>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm">AI Aachi is cooking up a response...</span>
               </div>
             )}
             <div ref={scrollRef} />
           </div>
         </ScrollArea>
 
-        {/* Input Area */}
-        <div className="p-4 border-t">
-          {selectedIngredients.length > 0 && (
-            <div className="mb-2 text-xs text-muted-foreground">
-              Selected: {selectedIngredients.join(", ")}
-            </div>
-          )}
-          <div className="flex gap-2">
+        <div className="p-4 border-t bg-background">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSend();
+            }}
+            className="flex gap-2"
+          >
             <Input
-              placeholder="Ask about recipes, cooking tips, or ingredients..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSend()}
+              placeholder="Ask about Tamil recipes..."
               disabled={isLoading}
               className="flex-1"
             />
-            <Button
-              onClick={() => handleSend()}
-              disabled={!input.trim() || isLoading}
-              size="icon"
-            >
+            <Button type="submit" disabled={isLoading || !input.trim()} size="icon">
               <Send className="h-4 w-4" />
             </Button>
-          </div>
+          </form>
         </div>
       </CardContent>
     </Card>
