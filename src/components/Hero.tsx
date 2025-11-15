@@ -50,13 +50,10 @@ const Hero = () => {
             <Button 
               size="lg" 
               variant="outline"
-              onClick={() => {
-                const recipesSection = document.getElementById('popular-recipes');
-                recipesSection?.scrollIntoView({ behavior: 'smooth' });
-              }}
+              onClick={() => navigate("/all-recipes")}
               className="text-lg px-8 border-2"
             >
-              Browse Recipes
+              View All 500 Recipes
             </Button>
           </div>
         </div>
