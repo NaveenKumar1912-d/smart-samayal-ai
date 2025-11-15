@@ -6,6 +6,42 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+async function generateRecipeImage(recipeName: string, apiKey: string): Promise<string | null> {
+  try {
+    const prompt = `Professional food photography of ${recipeName}, Tamil cuisine, beautifully plated on traditional banana leaf, vibrant colors, natural lighting, appetizing, high quality, 4k`;
+    
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash-image-preview",
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        modalities: ["image", "text"]
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Image generation failed:", response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    return imageUrl || null;
+  } catch (error) {
+    console.error("Error generating image:", error);
+    return null;
+  }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -30,12 +66,27 @@ Your expertise includes traditional South Indian dishes like:
 CRITICAL RULES:
 1. When users provide specific ingredients, ONLY use those ingredients in your recipes
 2. DO NOT suggest adding extra ingredients unless the user asks
-3. If the provided ingredients are insufficient for a complete dish, explain what's missing and offer to suggest recipes with just those ingredients
-4. Provide step-by-step instructions with cooking times and serving sizes
-5. Add helpful tips and variations
-6. Use friendly Tanglish (Tamil-English mix) phrases naturally
+3. If the provided ingredients are insufficient for a complete dish, explain what's missing
+4. Suggest ONE recipe at a time with complete step-by-step instructions
+5. Start each recipe response with the exact recipe name on the first line (e.g., "Masala Dosa" or "Sambar")
+6. Include cooking times and serving sizes
+7. Use friendly Tanglish (Tamil-English mix) phrases naturally
 
-Be warm, encouraging, and culturally authentic.`;
+Format your recipe responses like this:
+[Recipe Name]
+
+Ingredients:
+- List all ingredients with measurements
+
+Step-by-step Instructions:
+1. First step
+2. Second step
+(continue...)
+
+Cooking Time: X minutes
+Serves: Y people
+
+Tips: Add helpful cooking tips`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -71,7 +122,80 @@ Be warm, encouraging, and culturally authentic.`;
       throw new Error("AI gateway error");
     }
 
-    return new Response(response.body, {
+    // Create a transform stream to inject image generation
+    const { readable, writable } = new TransformStream();
+    const writer = writable.getWriter();
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+
+    let fullResponse = "";
+    let imageGenerated = false;
+
+    (async () => {
+      try {
+        const reader = response.body?.getReader();
+        if (!reader) throw new Error("No reader available");
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          fullResponse += chunk;
+
+          // Forward the chunk to the client
+          await writer.write(encoder.encode(chunk));
+
+          // Check if we have enough content to extract recipe name and generate image
+          if (!imageGenerated && fullResponse.includes("data: ") && fullResponse.length > 100) {
+            const lines = fullResponse.split("\n");
+            let recipeContent = "";
+            
+            for (const line of lines) {
+              if (line.startsWith("data: ") && line !== "data: [DONE]") {
+                try {
+                  const data = JSON.parse(line.slice(6));
+                  const content = data.choices?.[0]?.delta?.content;
+                  if (content) recipeContent += content;
+                } catch (e) {
+                  // Ignore parse errors
+                }
+              }
+            }
+
+            // Extract recipe name (first line of content)
+            const firstLine = recipeContent.split('\n')[0]?.trim();
+            if (firstLine && firstLine.length > 3 && firstLine.length < 50) {
+              imageGenerated = true;
+              console.log("Generating image for recipe:", firstLine);
+              
+              // Generate image in background
+              generateRecipeImage(firstLine, LOVABLE_API_KEY).then(async (imageUrl) => {
+                if (imageUrl) {
+                  // Send image as a special event
+                  const imageEvent = `data: ${JSON.stringify({
+                    choices: [{
+                      delta: {
+                        role: "assistant",
+                        image: imageUrl
+                      }
+                    }]
+                  })}\n\n`;
+                  await writer.write(encoder.encode(imageEvent));
+                }
+              }).catch(err => console.error("Image generation error:", err));
+            }
+          }
+        }
+
+        await writer.close();
+      } catch (error) {
+        console.error("Stream error:", error);
+        await writer.abort(error);
+      }
+    })();
+
+    return new Response(readable, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (error) {
