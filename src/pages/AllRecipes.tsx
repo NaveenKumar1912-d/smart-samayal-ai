@@ -1,56 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, ChefHat, Sparkles } from "lucide-react";
+import { Search, ChefHat, Sparkles, Loader2 } from "lucide-react";
 import { ParsedRecipe } from "@/utils/recipeParser";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-// Sample of recipes from the uploaded collection
-// In a real implementation, you would load all 500 from a JSON file or API
-const sampleRecipes: ParsedRecipe[] = [
-  {
-    id: "kongu-nadu-sambar",
-    name: "Sambar",
-    region: "Kongu Nadu",
-    category: "Vegetarian",
-    ingredients: [
-      "Traditional Kongu Nadu spices and ingredients",
-      "Turmeric, chilli, coriander, curry leaves",
-      "Dal, vegetables"
-    ],
-    steps: [
-      "Prepare fresh ingredients",
-      "Start with regional-style tempering",
-      "Add main ingredient and spices",
-      "Cook until aroma develops",
-      "Add water or coconut milk as needed",
-      "Simmer and garnish with coriander"
-    ]
-  },
-  {
-    id: "chola-nadu-fish-kuzhambu",
-    name: "Fish Kuzhambu",
-    region: "Chola Nadu",
-    category: "Non-Vegetarian",
-    ingredients: [
-      "Traditional Chola Nadu spices and ingredients",
-      "Turmeric, chilli, coriander, curry leaves",
-      "Fresh fish, tamarind"
-    ],
-    steps: [
-      "Prepare fresh ingredients",
-      "Start with regional-style tempering",
-      "Add main ingredient and spices",
-      "Cook until aroma develops",
-      "Add water or coconut milk as needed",
-      "Simmer and garnish with coriander"
-    ]
-  }
-];
 
 const AllRecipes = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -59,8 +17,33 @@ const AllRecipes = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<ParsedRecipe | null>(null);
   const [generatedRecipes, setGeneratedRecipes] = useState<ParsedRecipe[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [loadedRecipes, setLoadedRecipes] = useState<ParsedRecipe[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const allRecipes = [...sampleRecipes, ...generatedRecipes];
+  useEffect(() => {
+    loadRecipesFromZip();
+  }, []);
+
+  const loadRecipesFromZip = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('load-recipes');
+      
+      if (error) throw error;
+      
+      if (data?.recipes) {
+        setLoadedRecipes(data.recipes);
+        toast.success(`Loaded ${data.recipes.length} recipes successfully!`);
+      }
+    } catch (error) {
+      console.error('Error loading recipes:', error);
+      toast.error('Failed to load recipes from zip file');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const allRecipes = [...loadedRecipes, ...generatedRecipes];
   const regions = ["all", ...new Set(allRecipes.map(r => r.region))];
   const categories = ["all", ...new Set(allRecipes.map(r => r.category))];
 
@@ -96,6 +79,17 @@ const AllRecipes = () => {
     
     return matchesSearch && matchesRegion && matchesCategory;
   });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-lg text-muted-foreground">Loading 500+ Tamil Nadu recipes...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background py-12 px-4">
