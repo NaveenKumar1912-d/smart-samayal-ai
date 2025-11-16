@@ -21,7 +21,7 @@ serve(async (req) => {
 
   try {
     // Fetch the zip file from public directory
-    const zipUrl = `${req.headers.get('origin')}/data/tamilnadu_recipes.zip`;
+    const zipUrl = `${req.headers.get('origin')}/data/tamilnadu_500_recipes_with_50_images.zip`;
     const zipResponse = await fetch(zipUrl);
     
     if (!zipResponse.ok) {
