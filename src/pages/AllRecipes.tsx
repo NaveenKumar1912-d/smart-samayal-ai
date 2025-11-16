@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, ChefHat, Sparkles, Loader2 } from "lucide-react";
+import { Search, ChefHat, Sparkles, Loader2, Upload } from "lucide-react";
 import { ParsedRecipe } from "@/utils/recipeParser";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -19,27 +19,71 @@ const AllRecipes = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [loadedRecipes, setLoadedRecipes] = useState<ParsedRecipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
-    loadRecipesFromZip();
+    loadRecipesFromDatabase();
   }, []);
 
-  const loadRecipesFromZip = async () => {
+  const loadRecipesFromDatabase = async () => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('load-recipes');
+      const { data, error } = await supabase
+        .from('recipes')
+        .select('*')
+        .order('name');
       
       if (error) throw error;
       
-      if (data?.recipes) {
-        setLoadedRecipes(data.recipes);
-        toast.success(`Loaded ${data.recipes.length} recipes successfully!`);
+      if (data) {
+        setLoadedRecipes(data);
+        if (data.length === 0) {
+          toast.info('No recipes found. Please upload the recipe zip file.');
+        } else {
+          toast.success(`Loaded ${data.length} recipes!`);
+        }
       }
     } catch (error) {
       console.error('Error loading recipes:', error);
-      toast.error('Failed to load recipes from zip file');
+      toast.error('Failed to load recipes from database');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract-and-store-recipes`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      
+      if (!response.ok) throw new Error(data.error);
+      
+      if (data?.success) {
+        toast.success(data.message);
+        await loadRecipesFromDatabase();
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast.error('Failed to upload and extract recipes');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -94,25 +138,52 @@ const AllRecipes = () => {
   return (
     <div className="min-h-screen bg-background py-12 px-4">
       <div className="container mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
           <div className="flex items-center gap-3">
             <ChefHat className="h-10 w-10 text-primary" />
             <div>
               <h1 className="text-4xl font-bold">Tamil Nadu Recipe Collection</h1>
               <p className="text-muted-foreground mt-1">
-                {allRecipes.length} recipes available ({generatedRecipes.length} AI-generated)
+                {allRecipes.length} recipes available
               </p>
             </div>
           </div>
-          <Button 
-            onClick={handleGenerateRecipe} 
-            disabled={isGenerating}
-            size="lg"
-            className="gap-2"
-          >
-            <Sparkles className="h-5 w-5" />
-            {isGenerating ? "Generating..." : "Generate Recipe"}
-          </Button>
+          <div className="flex gap-2">
+            {loadedRecipes.length === 0 && (
+              <div className="relative">
+                <Input
+                  type="file"
+                  accept=".zip"
+                  onChange={handleFileUpload}
+                  disabled={isUploading}
+                  className="hidden"
+                  id="zip-upload"
+                />
+                <label htmlFor="zip-upload">
+                  <Button
+                    disabled={isUploading}
+                    size="lg"
+                    className="gap-2"
+                    asChild
+                  >
+                    <span>
+                      <Upload className="h-5 w-5" />
+                      {isUploading ? "Uploading..." : "Upload Recipe Zip"}
+                    </span>
+                  </Button>
+                </label>
+              </div>
+            )}
+            <Button 
+              onClick={handleGenerateRecipe} 
+              disabled={isGenerating}
+              size="lg"
+              className="gap-2"
+            >
+              <Sparkles className="h-5 w-5" />
+              {isGenerating ? "Generating..." : "Generate Recipe"}
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
