@@ -4,8 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, ChefHat } from "lucide-react";
+import { Search, ChefHat, Sparkles } from "lucide-react";
 import { ParsedRecipe } from "@/utils/recipeParser";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 // Sample of recipes from the uploaded collection
 // In a real implementation, you would load all 500 from a JSON file or API
@@ -55,11 +57,38 @@ const AllRecipes = () => {
   const [selectedRegion, setSelectedRegion] = useState<string>("all");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedRecipe, setSelectedRecipe] = useState<ParsedRecipe | null>(null);
+  const [generatedRecipes, setGeneratedRecipes] = useState<ParsedRecipe[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  const regions = ["all", ...new Set(sampleRecipes.map(r => r.region))];
-  const categories = ["all", ...new Set(sampleRecipes.map(r => r.category))];
+  const allRecipes = [...sampleRecipes, ...generatedRecipes];
+  const regions = ["all", ...new Set(allRecipes.map(r => r.region))];
+  const categories = ["all", ...new Set(allRecipes.map(r => r.category))];
 
-  const filteredRecipes = sampleRecipes.filter(recipe => {
+  const handleGenerateRecipe = async () => {
+    setIsGenerating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-recipe', {
+        body: { 
+          region: selectedRegion !== "all" ? selectedRegion : undefined,
+          category: selectedCategory !== "all" ? selectedCategory : undefined
+        }
+      });
+
+      if (error) throw error;
+      
+      if (data) {
+        setGeneratedRecipes(prev => [data, ...prev]);
+        toast.success(`Generated new recipe: ${data.name}`);
+      }
+    } catch (error) {
+      console.error('Error generating recipe:', error);
+      toast.error('Failed to generate recipe. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const filteredRecipes = allRecipes.filter(recipe => {
     const matchesSearch = recipe.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          recipe.ingredients.some(i => i.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesRegion = selectedRegion === "all" || recipe.region === selectedRegion;
@@ -71,9 +100,25 @@ const AllRecipes = () => {
   return (
     <div className="min-h-screen bg-background py-12 px-4">
       <div className="container mx-auto">
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <ChefHat className="h-10 w-10 text-primary" />
-          <h1 className="text-4xl font-bold">Tamil Nadu Recipe Collection</h1>
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <ChefHat className="h-10 w-10 text-primary" />
+            <div>
+              <h1 className="text-4xl font-bold">Tamil Nadu Recipe Collection</h1>
+              <p className="text-muted-foreground mt-1">
+                {allRecipes.length} recipes available ({generatedRecipes.length} AI-generated)
+              </p>
+            </div>
+          </div>
+          <Button 
+            onClick={handleGenerateRecipe} 
+            disabled={isGenerating}
+            size="lg"
+            className="gap-2"
+          >
+            <Sparkles className="h-5 w-5" />
+            {isGenerating ? "Generating..." : "Generate Recipe"}
+          </Button>
         </div>
 
         {/* Filters */}
